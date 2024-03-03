@@ -1,12 +1,13 @@
-## Type-checking
+## ✅ Type-checking
 >   기본적으로 Nuxt는 성능상의 이유로 nuxi dev 또는 nuxi build를 실행할 때 타입을 확인하지 않습니다. 빌드 또는 개발 시 타입 검사를 활성화하려면 vue-tsc 및 typescript를 개발 종속성으로 설치하십시오.
 ```bash
 npm install -D vue-tsc typescript
 ```
 
 
-## ESLINT
+## ✅ ESLINT
 1. eslint 를 적용할 수 있게 관련 모듈들을 설치
+
 ```bash
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
@@ -20,6 +21,7 @@ npm install -D vue-tsc typescript
 ```
 2. ESLINT 설정 파일(.eslintrc.cjs) 에 룰을 지정했다. ---> 이것은 지킬 나의 룰들
 3. lint script 를 설정함. (검사기능 등)
+
 ```bash
 "scripts": {
     "build": "nuxi build",
@@ -39,7 +41,7 @@ npm install -D vue-tsc typescript
 
 
 
-## Custom
+## ✅ Custom
 - NuxtLink 를 삽입했을때 a 태그로 렌더링 되지 않고 속성만 사용하고 싶을 경우 custom 을 사용한다.
 - custom 삽입함 (커스텀 속성 사용한다 선언)
 - v-slot이용 (속성 넣음) : v-slot="{ navigate }
@@ -52,7 +54,8 @@ npm install -D vue-tsc typescript
 ```
 
 
-## TypeScript
+## ✅ TypeScript
+
 ```bash
 # ~/types/course.ts
 export interface Course {
@@ -80,7 +83,7 @@ export interface CourseWithPath
 }
 ```
 
-#### 전역 타입 지정 (타입 훅?)
+#### ✅ 전역 타입 지정 (타입 훅?)
 
 ```bash
 # ~/types/global.d.ts
@@ -94,9 +97,7 @@ declare global {
 
 ```
 
-
-
-## Route
+## ✅ Route
 ```bash
 <p>
   {{ $route.params }}
@@ -107,7 +108,8 @@ declare global {
 ## definePageMeta
 핵 중요...
 
-### 특수 메타데이터
+### ✅ 특수 메타데이터
+```bash
 1. alias
 페이지 별칭(alias)을 정의할 수 있습니다. 이를 통해 여러 URL Path에서 동일한 페이지에 접근할 수 있습니다. vue-router 문서에 정의된 대로 문자열이거나 문자열 배열일 수 있습니다.
 2. keepalive
@@ -129,9 +131,10 @@ nuxt.config에서 이러한 속성에 대한 기본값을 설정할 수 있습�
 파일 이름으로 표현할 수 있는 것보다 더 복잡한 패턴이 있는 경우 path matcher를 정의할 수 있습니다. 자세한 내용은 vue-router 문서를 참조하세요.
 ```
 
-## NUXTLINK
+## ✅ NUXTLINK
 <NuxtLink>컴포넌트는 Vue Router의 <RouterLink> 컴포넌트와 HTML의 <a> 태그를 모두 즉시 대체함. 
 링크가 내부인지 외부인지 지능적으로 결정하고 그에 따라 사용 가능한 최적화(프리페칭, 기본 속성 등)를 사용하여 링크를 렌더링.
+
 ```bash
 <template>
   <NuxtLink to="https://nuxtjs.org">
@@ -143,7 +146,8 @@ nuxt.config에서 이러한 속성에 대한 기본값을 설정할 수 있습�
 > Nuxt3 에서의 Prefetching은 웹 페이지를 로드하는 동안 브라우저가 미리 필요한 데이터를 미리 가져와서 사용자 경험을 최적화하는 기술. 이 기능은 페이지를 방문하기 전에 해당 페이지에 필요한 리소스를 미리 가져와서 사용자가 실제로 그 페이지로 이동할 때 로딩 시간을 단축 시킴.
 
 
-## LAYOUT
+## ✅ LAYOUT
+
 ```bash
 <script setup lang="ts">
 definePageMeta({
