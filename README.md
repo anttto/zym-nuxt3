@@ -1,5 +1,5 @@
 ## ✅ Type-checking
->   기본적으로 Nuxt는 성능상의 이유로 nuxi dev 또는 nuxi build를 실행할 때 타입을 확인하지 않습니다. 빌드 또는 개발 시 타입 검사를 활성화하려면 vue-tsc 및 typescript를 개발 종속성으로 설치하십시오.
+
 ```bash
 npm install -D vue-tsc typescript
 ```
@@ -42,10 +42,12 @@ npm install -D vue-tsc typescript
 
 
 ## ✅ Custom
-- NuxtLink 를 삽입했을때 a 태그로 렌더링 되지 않고 속성만 사용하고 싶을 경우 custom 을 사용한다.
-- custom 삽입함 (커스텀 속성 사용한다 선언)
-- v-slot이용 (속성 넣음) : v-slot="{ navigate }
-- @click="navigate" 으로 이벤트시 속성 사용하도록 지정
+
+- 엘리먼트를 렌더링 하지 않고 속성만 사용하고 싶을 경우 custom 을 사용
+- custom 삽입함 (커스텀 속성 사용 선언)
+- v-slot이용 (속성 넣음)
+- v-slot="{ navigate } === 내부의 자식 엘리먼트 중 해당 slot속성을 그대로 사용할 수 있게 됨.
+- 아래는 @click="navigate" 으로 부모의 v-slot 속성을 사용하는 예시
 
 ```bash
   <NuxtLink custom v-slot="{ navigate }" :to="`/course/${courseSlug}`">
