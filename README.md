@@ -155,17 +155,160 @@ declare global {
 
 ## ✅ LAYOUT
 
+1. 레이아웃을 지정하지 않으면 layouts/default.vue가 사용됨
+2. 애플리케이션에 단일 레이아웃만 있는 경우 대신 app.vue를 사용하는 것이 좋음
+
 ```bash
-<script setup lang="ts">
+-| layouts/
+---| default.vue
+---| custom.vue
+
+# ~/layouts/default.vue
+<template>
+  <div>
+    <p>모든 페이지에서 공유되는 기본 레이아웃 콘텐츠</p>
+    <slot />
+  </div>
+</template>
+
+# custom layout (definePageMeta 이용)
 definePageMeta({
   layout: 'custom'
 })
-</script>
+
+# 동적 layout 처리 (setPageLayout 이용)
+
+function enableCustomLayout () {
+  setPageLayout('custom')
+}
+definePageMeta({
+  layout: false,
+});
+
+<template>
+  <div>
+    <button @click="enableCustomLayout">Update layout</button>
+  </div>
+</template>
+
 ```
 
+## ✅ navigateTo
+> 페이지 탐색(이동) 함수
+
+```bash
+# 'to'를 문자열로 전달
+await navigateTo('/search')
+
+# ... 또는 라우트(route) 객체로
+await navigateTo({ path: '/search' })
+
+# ... 또는 쿼리 매개변수가 있는 라우트(route) 객체로
+await navigateTo({
+  path: '/search',
+  query: {
+    page: 1,
+    sort: 'asc'
+  }
+})
+
+# Route Middleware
+export default defineNuxtRouteMiddleware((to, from) => {
+  if (to.path !== '/search') {
+		// 리디렉션 코드를 '301 Moved Permanently'으로 설정
+    return navigateTo('/search', { redirectCode: 301 })
+  }
+})
+
+# 외부 링크 
+# 오류가 발생합니다.
+# 외부 URL로의 이동은 기본적으로 허용되지 않습니다.
+await navigateTo('https://nuxt.com')
+
+# 'external' 매개변수를 'true'로 설정하면 성공적으로 리디렉션됩니다.
+await navigateTo('https://nuxt.com', {
+  external: true
+})
+
+# open 속성
+# 새 탭에서 'https://nuxt.com'이 열립니다.
+await navigateTo('https://nuxt.com', {  
+  open: {
+    target: '_blank',
+    windowFeatures: {
+      width: 500,
+      height: 500
+    }
+  }
+})
+
+# 예시
+const movePage = async (path: string) => {
+  await navigateTo(path);
+};
+```
+
+
+
+## ✅ plugins
+1. Vue 애플리케이션 생성 시에 사용할 수 있는 플러그인 시스템
+2. 자동으로 plugins/ 디렉토리의 파일을 읽어와 Vue 애플리케이션 생성 시에 로드
+3. nuxt.config에 추가할 필요가 없음
+4. 서버 또는 클라이언트 측에서 플러그인을 로드 .server | .client 접미사를 사용
+
+```bash
+export default defineNuxtPlugin((nuxtApp) => {
+	nuxtApp.... 
+})
+```
+
+## ✅ Auto-imports
+> Nuxt는 components, composables, helper functions (utils/..) 및 Vue API를 자동으로 가져옴
+
+
+```bash
+#Auto-imports 비활성화
+
+# nuxt.config.ts
+export default defineNuxtConfig({
+  imports: {
+    autoImport: false
+  }
+})
+
+#third-party 패키지 Auto-import
+
+# nuxt.config.ts
+export default defineNuxtConfig({
+  imports: {
+    presets: [
+      {
+        from: 'vue-i18n',
+        imports: ['useI18n']
+      }
+    ]
+  }
+})
+
+```
+
+
+## ✅ Universal Rendering
+> 브라우저가 범용(universal)(server-side + client-side)렌더링이 활성화된 URL을 요청하면 서버는 완전히 렌더링된 HTML 페이지를 브라우저에 반환합니다. 페이지가 미리 생성되어 캐시되었거나 즉시 렌더링되었는지 여부에 관계없이 어느 시점에서 Nuxt는 서버 환경에서 JavaScript(Vue.js) 코드를 실행하여 HTML 문서를 생성했습니다. 사용자는 클라이언트 측 렌더링과 달리 애플리케이션의 콘텐츠를 즉시 얻습니다. 이 단계는 PHP 또는 Ruby 애플리케이션에서 수행되는 기존 서버 측 렌더링과 유사합니다.
+
+> 동적 인터페이스 및 페이지 전환과 같은 클라이언트 측 렌더링 방법의 이점을 잃지 않기 위해 클라이언트(브라우저)는 HTML 문서가 다운로드되면 백그라운드에서 서버에서 실행되는 JavaScript 코드를 로드합니다. 브라우저는 이를 다시 해석하고(따라서 Universal 렌더링 ) Vue.js는 문서를 제어하고 상호작용을 활성화합니다.
+
+> 브라우저에서 정적 페이지를 Interective 하게 동적으로 만드는 것을 "Hydration"이라고 합니다.Universal rendering을 사용하면 Nuxt 애플리케이션이 Client-side rendering의 이점을 유지하면서 빠른 페이지 로드 시간을 제공할 수 있습니다. 또한 콘텐츠가 HTML 문서에 이미 존재하므로 크롤러는 오버헤드 없이 콘텐츠를 색인화할 수 있습니다.
+
+## ✅ Hydration
+> Nuxt3에서 하이드레이션은 서버에서 렌더링된 HTML을 클라이언트에서 동적으로 완성하는 과정을 말합니다. 하이드레이션을 통해 서버에서 렌더링된 HTML에 JavaScript를 추가하여 사용자 입력에 반응하거나 데이터를 동적으로 업데이트할 수 있습니다.
+> Nuxt3는 SSR(Server-Side Rendering)을 지원합니다. SSR을 통해 서버에서 웹페이지를 완전히 렌더링하여 클라이언트로 전송할 수 있습니다. 이렇게 하면 웹페이지가 처음 로드될 때 더 빠르게 렌더링될 수 있습니다.
+> 그러나 SSR은 클라이언트 측에서 JavaScript를 실행할 수 없기 때문에 사용자 입력에 반응하거나 데이터를 동적으로 업데이트할 수 없습니다. 이를 해결하기 위해 Nuxt3는 하이드레이션을 사용합니다.
+> 하이드레이션을 통해 서버에서 렌더링된 HTML에 JavaScript를 추가하여 사용자 입력에 반응하거나 데이터를 동적으로 업데이트할 수 있습니다.
 
 
 # 점검할 것들 (전적검색 nuxt)
 1. 라우팅 (중첩라우팅을 활용한 데이터와 라우팅의 깔끔한 분리?)
 2. 타입 정의 (api 위주로)
 3. eslint / prettier 정리
+4. nuxt3 배포시에 dist ? output 폴더 구분 (배포 서비스 확인)
