@@ -85,6 +85,27 @@ export interface CourseWithPath
   studentCount: string;
   path: string;
 }
+
+# CourseWithPath를 사용하는 컴포넌트 예시
+import type { CourseWithPath } from '~/types/course';
+
+interface CourseReturn {
+  course: Maybe<CourseWithPath>; // Course | null | undefined
+  prevCourse: Maybe<CourseWithPath>;
+  nextCourse: Maybe<CourseWithPath>;
+}
+export const useCourse = (courseSlug: string): CourseReturn => {
+  const { courses } = useCourses();
+  const index = courses.findIndex((course) => course.courseSlug === courseSlug);
+  const course = courses[index];
+  const prevCourse = index <= 0 ? null : courses[index - 1];
+  const nextCourse = index >= courses.length - 1 ? null : courses[index + 1];
+  return {
+    course,
+    prevCourse,
+    nextCourse,
+  };
+}
 ```
 
 #### ✅ 전역 타입 지정 (타입 훅?)
@@ -106,7 +127,13 @@ declare global {
 <p>
   {{ $route.params }}
 </p>
-# path(param), query 모두 적용 가능 
+
+<script setup lang="ts">
+const route = useRoute();
+const param = route.params; //params 전체 
+const courseSlug = route.params.courseSlug as string; //courseSlug params 가져오기 (string 타입 강제 지정)
+</script>
+# path(params), query 모두 적용 가능 
 ```
 
 ## definePageMeta
