@@ -248,7 +248,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
 })
 
 # 외부 링크 
-# 오류가 발생합니다.
 # 외부 URL로의 이동은 기본적으로 허용되지 않습니다.
 await navigateTo('https://nuxt.com')
 
@@ -333,6 +332,79 @@ export default defineNuxtConfig({
 > Nuxt3는 SSR(Server-Side Rendering)을 지원합니다. SSR을 통해 서버에서 웹페이지를 완전히 렌더링하여 클라이언트로 전송할 수 있습니다. 이렇게 하면 웹페이지가 처음 로드될 때 더 빠르게 렌더링될 수 있습니다. 그러나 SSR은 클라이언트 측에서 JavaScript를 실행할 수 없기 때문에 사용자 입력에 반응하거나 데이터를 동적으로 업데이트할 수 없습니다. 이를 해결하기 위해 Nuxt3는 하이드레이션을 사용합니다.
 
 > 하이드레이션을 통해 서버에서 렌더링된 HTML에 JavaScript를 추가하여 사용자 입력에 반응하거나 데이터를 동적으로 업데이트할 수 있습니다.
+
+
+## ✅ createError Error Utils --> 핵 중요... (후에 제대로 정리할 것)
+
+
+## ✅ Route Middleware
+> 특정 라우트로 이동하기 전에 코드를 실행
+
+```bash
+라우트 미들웨어는 Nuxt 앱의 Vue 부분 내에서 실행됩니다. 비슷한 이름이지만, 이것들은 Nitro 서버 부분에서 실행되는 서버 미들웨어와 다름.
+*** Route Middleware ≠ Server Middleware
+
+1. **Anonymous (or inline) Middleware**
+    
+    익명(또는 인라인) 라우트 미들웨어는 페이지에서 직접 정의됨
+    
+2. **Named Middleware**
+    
+    명명된 라우트 미들웨어는 `middleware/` 디렉토리에 배치되어 페이지에서 사용될 때 비동기 가져오기(astnchoronous import)를 통해 자동으로 로드 (**참고**: 라우트 미들웨어 이름은 케밥 케이스로 표준화되므로 `someMiddleware`는 `some-middleware`가 )
+    
+3. **Global Middleware**
+    
+    **전역 라우트 미들웨어**는 `middleware/` 디렉토리에 배치되어 (`.global` 접미사와 함께) 모든 라우트 변경 시 자동으로 실행
+
+
+(예시)
+# middleware/my-middleware.ts
+
+export default defineNuxtRouteMiddleware((to, from) => {
+  if (to.params.id === '1') {
+    return abortNavigation(); // 네비게이션을 중단 시킴
+  }
+  # to.path를 활용한 무한 리디렉션 루프 방지
+  if (to.path !== '/') {
+    return navigateTo('/')
+  }
+
+  #서버 렌더링 시 (초기 url 입력시)
+  if (process.server) return navigateTo('/');
+})
+```
+
+#### 미들웨어 순서
+> Middleware는 다음과 같은 순서로 실행됩니다.
+> **Global Middleware:** 모든 라우트에 적용되는 Middleware입니다.
+> **Page defined middleware order:** 페이지 정의된 미들웨어 순서 (배열 구문으로 여러 미들웨어를 선언한 경우)
+
+```bash
+middleware/
+--| analytics.global.ts
+--| setup.global.ts
+--| auth.ts
+
+<script setup lang="ts">
+definePageMeta({
+  middleware: [
+    function (to, from) {
+      // Custom inline middleware
+    },
+    'auth',
+  ],
+});
+</script>
+```
+
+순서 (예시)
+1. **analytics.global.ts**
+2. **setup.global.ts**
+3. **Custom inline middleware**
+4. **auth.ts**
+
+
+
 
 
 # 점검할 것들 (전적검색 nuxt)

@@ -4,4 +4,6 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.tabSize": 2,
+  "editor.defaultFormatter": null,
+  "eslint.format.enable": false,
 }
