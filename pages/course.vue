@@ -5,7 +5,13 @@
         <q-card>
           <q-item-label header>강의 로드맵 {{ $hello('fkfkfk') }}</q-item-label>
           <q-list bordered separator>
-            <q-item v-for="(course, index) in courses" :key="course.courseSlug" v-ripple clickable :to="course.path">
+            <q-item
+              v-for="(course, index) in courses"
+              :key="course.courseSlug"
+              v-ripple
+              clickable
+              :to="course.path"
+            >
               <q-item-section>
                 {{ index + 1 }}. {{ course.title }}
               </q-item-section>
@@ -35,7 +41,12 @@
               <div class="text-h6 q-mb-lg">
                 {{ error }}
               </div>
-              <q-btn label="Reset" color="positive" no-caps @click="error.value = null" />
+              <q-btn
+                label="Reset"
+                color="positive"
+                no-caps
+                @click="error.value = null"
+              />
             </div>
           </template>
         </NuxtErrorBoundary>
@@ -45,5 +56,5 @@
 </template>
 
 <script setup lang="ts">
-const { courses } = useCourses();
+const { courses } = await useCourses();
 </script>

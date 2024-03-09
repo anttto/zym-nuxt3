@@ -6,20 +6,26 @@
     <div v-if="error" class="text-red text-center">{{ error.message }}</div>
 
     <div class="q-mt-lg">
-      <q-btn class="full-width" label="Login" type="submit" size="lg" color="primary" no-caps :loading="loading" />
+      <q-btn
+        class="full-width"
+        label="Login"
+        type="submit"
+        size="lg"
+        color="primary"
+        no-caps
+        :loading="loading"
+      />
     </div>
   </q-form>
 </template>
 
 <script setup lang="ts">
+// const emit = defineEmits(['success']);
 const emit = defineEmits<{
   success: [];
 }>();
-// const emit = defineEmits(['success']);
 
-// const { signIn, signOut } = useAuth();
-
-const { signIn } = useAuth();
+const { signIn } = useAuthStore();
 
 const form = ref({
   email: '',

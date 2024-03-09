@@ -10,7 +10,9 @@
       </template>
       <div class="q-my-xl text-center">
         <PageTitle title="레이아웃 재정의" />
-        <PageDescription description="Admin Layout 실습을 위한 페이지 입니다." />
+        <PageDescription
+          description="Admin Layout 실습을 위한 페이지 입니다."
+        />
       </div>
     </NuxtLayout>
   </div>

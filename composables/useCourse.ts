@@ -1,19 +1,13 @@
-import type { CourseWithPath } from '~/types/course';
+import type { CourseReturn } from '~/types/course';
 
-interface CourseReturn {
-  course: Maybe<CourseWithPath>; // Course | null | undefined
-  prevCourse: Maybe<CourseWithPath>;
-  nextCourse: Maybe<CourseWithPath>;
-}
-export const useCourse = (courseSlug: string): CourseReturn => {
-  const { courses } = useCourses();
-  const index = courses.findIndex((course) => course.courseSlug === courseSlug);
-  const course = courses[index];
-  const prevCourse = index <= 0 ? null : courses[index - 1];
-  const nextCourse = index >= courses.length - 1 ? null : courses[index + 1];
-  return {
-    course,
-    prevCourse,
-    nextCourse,
-  };
+export const useCourse = async (courseSlug: string): Promise<CourseReturn> => {
+  const { data, error } = await useFetch(`/api/courses/${courseSlug}`);
+
+  if (error.value) {
+    throw createError({
+      ...error.value,
+    });
+  }
+
+  return data.value as CourseReturn;
 };

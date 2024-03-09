@@ -1,8 +1,11 @@
+import { useAuthUser } from './useAuthUser';
 import { getUser } from './userData';
 import type { UserWithoutPassword } from '~/types/user';
 
 export const useAuth = () => {
-  const { authUser } = useAuthUser(); // 로그인 한 유저를 관리
+  // const { authUser } = useAuthUser(); // 로그인 한 유저를 관리
+
+  const authUser = useAuthUser();
 
   // Sign In
   const signIn = (email: string, password: string) => {

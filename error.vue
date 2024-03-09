@@ -10,7 +10,13 @@
     <p class="text-subtitle2">
       {{ JSON.stringify(globalError) }}
     </p>
-    <q-btn label="Go Home" size="lg" color="primary" no-caps @click="handleError" />
+    <q-btn
+      label="Go Home"
+      size="lg"
+      color="primary"
+      no-caps
+      @click="handleError"
+    />
   </div>
 </template>
 
