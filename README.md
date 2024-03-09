@@ -404,11 +404,188 @@ definePageMeta({
 4. **auth.ts**
 
 
+## ✅ useState
+
+> 상태 관리 라이브러리와 useState 컴포저블을 제공하여 반응형이고 SSR 친화적인 공유 상태를 생성
+> useState 컴포저블은 ref 대신 사용할 수 있으며 SSR 친화적. 해당 값은 서버 측 렌더링 후(클라이언트 측 하이드레이션 중) 유지되며 고유 키를 사용하여 모든 컴포넌트에서 공유됨.
+
+```bash
+#example
+<script setup lang="ts">
+const counter = useState('counter', () => Math.round(Math.random() * 1000))
+</script>
+
+```
+** 내장 상태관리 컴포저블이기에 공통적으로 Pinia 를 사용하는게 나을듯. (확장성&기능 상위호환)
+```
+useState() → → → → → → → 복잡도 → → → → → → → Pinia
+```
+
+
+## ✅ useRequestHeaders
+
+> pages, components, plugins 내에서 들어오는 요청 헤더에 액세스하기 위한 내장 컴포저블
+> 브라우저에서 useRequestHeaders는 빈 객체를 반환함 (중요)
+```bash
+# 모든 요청 헤더를 가져옵니다.
+const headers = useRequestHeaders()
+
+# 쿠키 요청 헤더를 가져옵니다.
+const headers = useRequestHeaders(['cookie'])
+
+# SSR 중 향후 내부 요청에 대한 초기 요청의 `authorization` 헤더에 액세스하고 프록시할 수 있습니다. 아래 예에서는 동형 `$fetch` 호출에 `authorization` 요청 헤더를 추가
+<script setup lang="ts">
+const { data } = await useFetch('/api/confidential', {
+  headers: useRequestHeaders(['authorization'])
+})
+</script>
+
+```
+
+
+## ✅ Pinia
+
+[공식 nuxt/pinia](https://nuxt.com/modules/pinia)
+
+```bash
+#install
+npm i pinia @pinia/nuxt
+
+#nuxt.config.ts
+export default defineNuxtConfig({
+    modules: ['@pinia/nuxt'],
+})
+
+#example
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0);
+  const name = ref('Eduardo');
+  const doubleCount = computed(() => count.value * 2);
+  
+  function increment() {
+    count.value++;
+  }
+
+  return { count, name, doubleCount, increment };
+});
+
+#use
+<script setup lang="ts">
+const counterStore = useCounterStore();
+const { count, name, doubleCount } = storeToRefs(counterStore); //반응성(storeToRefs)
+const { increment } = counterStore; //메서드
+</script>
+```
+
+```
+### Pinia가 `useState`보다 나은 이유는 무엇인가요?
+
+Pinia는 계속해서 더 많은 실용적인 기능을 추가한 결과물입니다.
+
+Pinia는 Nuxt의 `useState`보다 더 나은 개발자 경험(DX)을 제공하여 응용 프로그램이 크기와 복잡성이 커짐에 따라 필요한 더 많은 기능을 제공합니다. 다시 말하면, Pinia를 사용하지 않으면 응용 프로그램을 다시 만들고 고유의 상태 관리 라이브러리를 작성할 가능성이 매우 높습니다. 그러니 처음부터 고생을 피해보세요.
+
+Pinia가 `useState`에 비해 우리에게 제공하는 주요 DX 개선 사항은 다음과 같습니다.
+
+1. 매우 슬릭한 DevTools 통합
+2. 상태를 조직하기 위한 저장소
+3. 상태 업데이트 및 상태 검색을 더 쉽게하기 위한 Actions 및 Getters
+```
+
+#### Pinia 상태 유지 (pinia-plugin-persistedstate) 
+```bash
+#install
+npm i -D @pinia-plugin-persistedstate/nuxt
+
+#nuxt.config.ts
+export default defineNuxtConfig({
+  modules: [
+    '@pinia/nuxt', // needed
+    '@pinia-plugin-persistedstate/nuxt',
+  ]
+})
+
+#use
+export const useStore = defineStore('main', () => {
+	const someState = ref('hello pinia');
+
+	return {
+		someState
+	};
+}, {
+  
+  //기본값 (쿠키)
+  persist: true,  
+  
+  //확장형 (쿠키, 로컬스토리지 등 변경)
+  persist: {
+    storage: persistedState.localStorage,
+  },
+  
+  // 다만, 로컬스토리지 저장 방식으로 변경할 시, client 환경에서 localstorage가 작동하기 때문에
+  pinia 의 상태값이 ssr 이후에 불러와지는 이슈가 있음. (hydration 이슈 발생함)
+  ClientOnly 로 처리는 되지만 깜빡이는 상태가 보임. (좋지않다...) 
+  '그냥 쿠키로 처리하자.'
+})
+```
 
 
 
-# 점검할 것들 (전적검색 nuxt)
-1. 라우팅 (중첩라우팅을 활용한 데이터와 라우팅의 깔끔한 분리?)
-2. 타입 정의 (api 위주로)
-3. eslint / prettier 정리
-4. nuxt3 배포시에 dist ? output 폴더 구분 (배포 서비스 확인)
+## ✅ useCookie
+> useCookie은 SSR(서버 사이드 렌더링)를 지원하는 쿠키를 읽고 쓰기 위한 컴포저블. 
+> pages, components, plugins 내에서 useCookie를 사용 가능.
+
+```bash
+
+<script setup lang="ts">
+# 'counter'라는 쿠키를 생성하고,
+const counter = useCookie('counter')
+# 쿠키값이 없으면 초기값을 임이의 값으로 설정합니다.
+counter.value = counter.value || Math.round(Math.random() * 1000)
+</script>
+
+<template>
+  <div>
+		<!-- counter 변수를 업데이트할 때마다 쿠키도 업데이트 -->
+    <h1>Counter: {{ counter || '-' }}</h1>
+    <button @click="counter = null">reset</button>
+    <button @click="counter--">-</button>
+    <button @click="counter++">+</button>
+  </div>
+</template>
+
+```
+
+```bash
+# layouts/default.vue
+<template>
+<!-- ...생략... -->
+</template>
+<script setup lang="ts">
+// ...생략...
+watch(locale, (val) => (useCookie('locale').value = val));
+</script>
+
+
+# plugins/i18n.ts
+import { createI18n } from 'vue-i18n';
+
+export default defineNuxtPlugin(({ vueApp }) => {
+  const i18n = createI18n({
+    legacy: false,
+    globalInjection: true,
+    locale: useCookie('locale').value || useDefaultLocale().value, //useCookie 사용
+    messages: {
+      'en-US': {
+        home: 'Home',
+        about: 'About',
+      },
+      'ko-KR': {
+        home: '홈',
+        about: '어바웃',
+      },
+    },
+  });
+  vueApp.use(i18n);
+});
+
+```
