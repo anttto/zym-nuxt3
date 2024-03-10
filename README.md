@@ -448,7 +448,7 @@ const { data } = await useFetch('/api/confidential', {
 [공식 nuxt/pinia](https://nuxt.com/modules/pinia)
 
 ```bash
-#install
+# install
 npm i pinia @pinia/nuxt
 
 #nuxt.config.ts
@@ -456,7 +456,7 @@ export default defineNuxtConfig({
     modules: ['@pinia/nuxt'],
 })
 
-#example
+# example
 export const useCounterStore = defineStore('counter', () => {
   const count = ref(0);
   const name = ref('Eduardo');
@@ -469,7 +469,7 @@ export const useCounterStore = defineStore('counter', () => {
   return { count, name, doubleCount, increment };
 });
 
-#use
+# use
 <script setup lang="ts">
 const counterStore = useCounterStore();
 const { count, name, doubleCount } = storeToRefs(counterStore); //반응성(storeToRefs)
