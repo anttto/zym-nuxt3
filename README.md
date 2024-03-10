@@ -518,19 +518,19 @@ export const useStore = defineStore('main', () => {
     someState
   };
 }, {
-  
-  // 기본값 (쿠키)
-  persist: true,  
-  
-  // 확장형 (쿠키, 로컬스토리지 등 변경)
-  persist: {
-    storage: persistedState.localStorage,
-  },
-  
-  // 다만, 로컬스토리지 저장 방식으로 변경할 시, client 환경에서 localstorage가 작동하기 때문에
-  // pinia 의 상태값이 ssr 이후에 불러와지는 이슈가 있음. (hydration 이슈 발생함)
-  // ClientOnly 로 처리는 되지만 깜빡이는 상태가 보임. (좋지않다...) 
-  // '그냥 쿠키로 처리하자.'
+
+// 기본값 (쿠키)
+persist: true,  
+
+// 확장형 (쿠키, 로컬스토리지 등 변경)
+persist: {
+  storage: persistedState.localStorage,
+},
+
+// 다만, 로컬스토리지 저장 방식으로 변경할 시, client 환경에서 localstorage가 작동하기 때문에
+// pinia 의 상태값이 ssr 이후에 불러와지는 이슈가 있음. (hydration 이슈 발생함)
+// ClientOnly 로 처리는 되지만 깜빡이는 상태가 보임. (좋지않다...) 
+// '그냥 쿠키로 처리하자.'
 })
 ```
 
