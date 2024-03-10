@@ -589,3 +589,114 @@ export default defineNuxtPlugin(({ vueApp }) => {
 });
 
 ```
+
+
+
+```
+const arr1 = [
+  { name: 'dosaeun', age: 41 },
+  { name: 'kim', age: 37 },
+  { name: 'HAEL', age: 7 },
+];
+
+const arr2 = [{ job: 'Dad' }, { job: 'Mom' }, { job: 'DDolmeng' }];
+
+// 특정 프로퍼티를 제외하는 배열 생성
+const removeAgeFromUsers = () => {
+  const names = arr1.map(({ age, ...rest }) => rest);
+  console.log(names);
+  return names;
+};
+removeAgeFromUsers();
+
+// 복수의 객체 배열을 병합하여 새로운 배열 생성
+const addJobToUsers = () => {
+  const names = arr1.map((list, idx) => ({ ...list, ...arr2[idx] }));
+  console.log(names);
+  return names;
+};
+addJobToUsers();
+```
+
+
+
+```javascript
+const arr1 = [
+  { name: 'dosaeun', age: 41 },
+  { name: 'kim', age: 37 },
+  { name: 'HAEL', age: 7 },
+];
+
+const arr2 = [{ job: 'Dad' }, { job: 'Mom' }, { job: 'DDolmeng' }];
+
+// 특정 프로퍼티를 제외하는 배열 생성
+const removeAgeFromUsers = () => {
+  const names = arr1.map(({ age, ...rest }) => rest);
+  console.log(names);
+  return names;
+};
+removeAgeFromUsers();
+
+// 복수의 객체 배열을 병합하여 새로운 배열 생성
+const addJobToUsers = () => {
+  const names = arr1.map((list, idx) => ({ ...list, ...arr2[idx] }));
+  console.log(names);
+  return names;
+};
+addJobToUsers();
+```
+
+```typescript
+const arr1 = [
+  { name: 'dosaeun', age: 41 },
+  { name: 'kim', age: 37 },
+  { name: 'HAEL', age: 7 },
+];
+
+const arr2 = [{ job: 'Dad' }, { job: 'Mom' }, { job: 'DDolmeng' }];
+
+// 특정 프로퍼티를 제외하는 배열 생성
+const removeAgeFromUsers = () => {
+  const names = arr1.map(({ age, ...rest }) => rest);
+  console.log(names);
+  return names;
+};
+removeAgeFromUsers();
+
+// 복수의 객체 배열을 병합하여 새로운 배열 생성
+const addJobToUsers = () => {
+  const names = arr1.map((list, idx) => ({ ...list, ...arr2[idx] }));
+  console.log(names);
+  return names;
+};
+addJobToUsers();
+```
+
+
+
+
+```bash
+const arr1 = [
+  { name: 'dosaeun', age: 41 },
+  { name: 'kim', age: 37 },
+  { name: 'HAEL', age: 7 },
+];
+
+const arr2 = [{ job: 'Dad' }, { job: 'Mom' }, { job: 'DDolmeng' }];
+
+// 특정 프로퍼티를 제외하는 배열 생성
+const removeAgeFromUsers = () => {
+  const names = arr1.map(({ age, ...rest }) => rest);
+  console.log(names);
+  return names;
+};
+removeAgeFromUsers();
+
+// 복수의 객체 배열을 병합하여 새로운 배열 생성
+const addJobToUsers = () => {
+  const names = arr1.map((list, idx) => ({ ...list, ...arr2[idx] }));
+  console.log(names);
+  return names;
+};
+addJobToUsers();
+```

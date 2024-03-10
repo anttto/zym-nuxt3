@@ -99,14 +99,6 @@ const route = useRoute();
 const courseSlug = route.params.courseSlug as string;
 const { course, prevCourse, nextCourse } = await useCourse(courseSlug);
 
-// if (!course) {
-//   throw createError({
-//     statusCode: 404,
-//     statusMessage: 'Course not found',
-//     // fatal: true,
-//   });
-// }
-
 console.log('[courseSlug].vue 컴포넌트 setup hooks');
 definePageMeta({
   key: (route) => route.fullPath,
