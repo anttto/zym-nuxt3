@@ -340,8 +340,10 @@ export default defineNuxtConfig({
 
 ## ✅ Route Middleware
 > 특정 라우트로 이동하기 전에 코드를 실행
+
 **라우트 미들웨어는 Nuxt 앱의 Vue 부분 내에서 실행됩니다. 비슷한 이름이지만, 이것들은 Nitro 서버 부분에서 실행되는 서버 미들웨어와 다름.**
-***Route Middleware ≠ Server Middleware***
+
+**Route Middleware ≠ Server Middleware**
 
 1. **Anonymous (or inline) Middleware**
     
