@@ -2,7 +2,7 @@
 
 ## ✅ Type-checking
 
-```bash
+```javascript
 npm install -D vue-tsc typescript
 ```
 
@@ -10,7 +10,7 @@ npm install -D vue-tsc typescript
 ## ✅ ESLINT
 1. eslint 를 적용할 수 있게 관련 모듈들을 설치
 
-```bash
+```javascript
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
@@ -24,7 +24,7 @@ npm install -D vue-tsc typescript
 2. ESLINT 설정 파일(.eslintrc.cjs) 에 룰을 지정했다. ---> 이것은 지킬 나의 룰들
 3. lint script 를 설정함. (검사기능 등)
 
-```bash
+```javascript
 "scripts": {
     "build": "nuxi build",
     "dev": "nuxi dev",
@@ -51,7 +51,7 @@ npm install -D vue-tsc typescript
 - v-slot="{ navigate } === 내부의 자식 엘리먼트 중 해당 slot속성을 그대로 사용할 수 있게 됨.
 - 아래는 @click="navigate" 으로 부모의 v-slot 속성을 사용하는 예시
 
-```bash
+```javascript
   <NuxtLink custom v-slot="{ navigate }" :to="`/course/${courseSlug}`">
     <CourseCard :title="title" :subtitle="subtitle" :thumbnail="thumbnail" @click="navigate" />
   </NuxtLink>
@@ -60,7 +60,7 @@ npm install -D vue-tsc typescript
 
 ## ✅ TypeScript
 
-```bash
+```javascript
 # ~/types/course.ts
 export interface Course {
   title: string;
@@ -110,7 +110,7 @@ export const useCourse = (courseSlug: string): CourseReturn => {
 
 #### ✅ 전역 타입 지정 (타입 훅?)
 
-```bash
+```javascript
 # ~/types/global.d.ts
 export {};
 declare global {
@@ -123,7 +123,7 @@ declare global {
 ```
 
 ## ✅ Route
-```bash
+```javascript
 <p>
   {{ $route.params }}
 </p>
@@ -169,7 +169,7 @@ const courseSlug = route.params.courseSlug as string; //courseSlug params 가져
 <NuxtLink>컴포넌트는 Vue Router의 <RouterLink> 컴포넌트와 HTML의 <a> 태그를 모두 즉시 대체함. 
 링크가 내부인지 외부인지 지능적으로 결정하고 그에 따라 사용 가능한 최적화(프리페칭, 기본 속성 등)를 사용하여 링크를 렌더링.
 
-```bash
+```javascript
 <template>
   <NuxtLink to="https://nuxtjs.org">
     Nuxt website
@@ -185,7 +185,7 @@ const courseSlug = route.params.courseSlug as string; //courseSlug params 가져
 1. 레이아웃을 지정하지 않으면 layouts/default.vue가 사용됨
 2. 애플리케이션에 단일 레이아웃만 있는 경우 대신 app.vue를 사용하는 것이 좋음
 
-```bash
+```javascript
 -| layouts/
 ---| default.vue
 ---| custom.vue
@@ -223,7 +223,7 @@ definePageMeta({
 ## ✅ navigateTo
 > 페이지 탐색(이동) 함수
 
-```bash
+```javascript
 # 'to'를 문자열로 전달
 await navigateTo('/search')
 
@@ -282,7 +282,7 @@ const movePage = async (path: string) => {
 3. nuxt.config에 추가할 필요가 없음
 4. 서버 또는 클라이언트 측에서 플러그인을 로드 .server | .client 접미사를 사용
 
-```bash
+```javascript
 export default defineNuxtPlugin((nuxtApp) => {
 	nuxtApp.... 
 })
@@ -292,7 +292,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 > Nuxt는 components, composables, helper functions (utils/..) 및 Vue API를 자동으로 가져옴
 
 
-```bash
+```javascript
 #Auto-imports 비활성화
 
 # nuxt.config.ts
@@ -340,7 +340,7 @@ export default defineNuxtConfig({
 ## ✅ Route Middleware
 > 특정 라우트로 이동하기 전에 코드를 실행
 
-```bash
+```javascript
 라우트 미들웨어는 Nuxt 앱의 Vue 부분 내에서 실행됩니다. 비슷한 이름이지만, 이것들은 Nitro 서버 부분에서 실행되는 서버 미들웨어와 다름.
 *** Route Middleware ≠ Server Middleware
 
@@ -379,7 +379,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 > **Global Middleware:** 모든 라우트에 적용되는 Middleware입니다.
 > **Page defined middleware order:** 페이지 정의된 미들웨어 순서 (배열 구문으로 여러 미들웨어를 선언한 경우)
 
-```bash
+```javascript
 middleware/
 --| analytics.global.ts
 --| setup.global.ts
@@ -409,7 +409,7 @@ definePageMeta({
 > 상태 관리 라이브러리와 useState 컴포저블을 제공하여 반응형이고 SSR 친화적인 공유 상태를 생성
 > useState 컴포저블은 ref 대신 사용할 수 있으며 SSR 친화적. 해당 값은 서버 측 렌더링 후(클라이언트 측 하이드레이션 중) 유지되며 고유 키를 사용하여 모든 컴포넌트에서 공유됨.
 
-```bash
+```javascript
 #example
 <script setup lang="ts">
 const counter = useState('counter', () => Math.round(Math.random() * 1000))
@@ -426,7 +426,7 @@ useState() → → → → → → → 복잡도 → → → → → → → Pin
 
 > pages, components, plugins 내에서 들어오는 요청 헤더에 액세스하기 위한 내장 컴포저블
 > 브라우저에서 useRequestHeaders는 빈 객체를 반환함 (중요)
-```bash
+```javascript
 # 모든 요청 헤더를 가져옵니다.
 const headers = useRequestHeaders()
 
@@ -447,7 +447,7 @@ const { data } = await useFetch('/api/confidential', {
 
 [공식 nuxt/pinia](https://nuxt.com/modules/pinia)
 
-```bash
+```javascript
 #install
 npm i pinia @pinia/nuxt
 
@@ -492,7 +492,7 @@ Pinia가 `useState`에 비해 우리에게 제공하는 주요 DX 개선 사항�
 ```
 
 #### Pinia 상태 유지 (pinia-plugin-persistedstate) 
-```bash
+```javascript
 #install
 npm i -D @pinia-plugin-persistedstate/nuxt
 
@@ -534,7 +534,7 @@ export const useStore = defineStore('main', () => {
 > useCookie은 SSR(서버 사이드 렌더링)를 지원하는 쿠키를 읽고 쓰기 위한 컴포저블. 
 > pages, components, plugins 내에서 useCookie를 사용 가능.
 
-```bash
+```javascript
 
 <script setup lang="ts">
 # 'counter'라는 쿠키를 생성하고,
@@ -555,7 +555,7 @@ counter.value = counter.value || Math.round(Math.random() * 1000)
 
 ```
 
-```bash
+```javascript
 # layouts/default.vue
 <template>
 <!-- ...생략... -->
@@ -592,90 +592,10 @@ export default defineNuxtPlugin(({ vueApp }) => {
 
 
 
-```
-const arr1 = [
-  { name: 'dosaeun', age: 41 },
-  { name: 'kim', age: 37 },
-  { name: 'HAEL', age: 7 },
-];
-
-const arr2 = [{ job: 'Dad' }, { job: 'Mom' }, { job: 'DDolmeng' }];
-
-// 특정 프로퍼티를 제외하는 배열 생성
-const removeAgeFromUsers = () => {
-  const names = arr1.map(({ age, ...rest }) => rest);
-  console.log(names);
-  return names;
-};
-removeAgeFromUsers();
-
-// 복수의 객체 배열을 병합하여 새로운 배열 생성
-const addJobToUsers = () => {
-  const names = arr1.map((list, idx) => ({ ...list, ...arr2[idx] }));
-  console.log(names);
-  return names;
-};
-addJobToUsers();
-```
-
-
+## ✅ 프로퍼티 제외 & 추출 예시
+> 스프레드 연산자를 이용하여 각 객체의 프로퍼티를 제외 및 추출 하여 새로운 객체 배열을 만드는 기본 예시
 
 ```javascript
-const arr1 = [
-  { name: 'dosaeun', age: 41 },
-  { name: 'kim', age: 37 },
-  { name: 'HAEL', age: 7 },
-];
-
-const arr2 = [{ job: 'Dad' }, { job: 'Mom' }, { job: 'DDolmeng' }];
-
-// 특정 프로퍼티를 제외하는 배열 생성
-const removeAgeFromUsers = () => {
-  const names = arr1.map(({ age, ...rest }) => rest);
-  console.log(names);
-  return names;
-};
-removeAgeFromUsers();
-
-// 복수의 객체 배열을 병합하여 새로운 배열 생성
-const addJobToUsers = () => {
-  const names = arr1.map((list, idx) => ({ ...list, ...arr2[idx] }));
-  console.log(names);
-  return names;
-};
-addJobToUsers();
-```
-
-```typescript
-const arr1 = [
-  { name: 'dosaeun', age: 41 },
-  { name: 'kim', age: 37 },
-  { name: 'HAEL', age: 7 },
-];
-
-const arr2 = [{ job: 'Dad' }, { job: 'Mom' }, { job: 'DDolmeng' }];
-
-// 특정 프로퍼티를 제외하는 배열 생성
-const removeAgeFromUsers = () => {
-  const names = arr1.map(({ age, ...rest }) => rest);
-  console.log(names);
-  return names;
-};
-removeAgeFromUsers();
-
-// 복수의 객체 배열을 병합하여 새로운 배열 생성
-const addJobToUsers = () => {
-  const names = arr1.map((list, idx) => ({ ...list, ...arr2[idx] }));
-  console.log(names);
-  return names;
-};
-addJobToUsers();
-```
-
-
-
-
-```bash
 const arr1 = [
   { name: 'dosaeun', age: 41 },
   { name: 'kim', age: 37 },
