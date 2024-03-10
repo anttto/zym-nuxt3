@@ -512,11 +512,11 @@ export default defineNuxtConfig({
 ```javascript
 // use
 export const useStore = defineStore('main', () => {
-	const someState = ref('hello pinia');
+  const someState = ref('hello pinia');
 
-	return {
-		someState
-	};
+  return {
+    someState
+  };
 }, {
   
   // 기본값 (쿠키)
