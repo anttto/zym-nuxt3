@@ -340,10 +340,8 @@ export default defineNuxtConfig({
 
 ## ✅ Route Middleware
 > 특정 라우트로 이동하기 전에 코드를 실행
-
-```javascript
-라우트 미들웨어는 Nuxt 앱의 Vue 부분 내에서 실행됩니다. 비슷한 이름이지만, 이것들은 Nitro 서버 부분에서 실행되는 서버 미들웨어와 다름.
-*** Route Middleware ≠ Server Middleware
+**라우트 미들웨어는 Nuxt 앱의 Vue 부분 내에서 실행됩니다. 비슷한 이름이지만, 이것들은 Nitro 서버 부분에서 실행되는 서버 미들웨어와 다름.**
+***Route Middleware ≠ Server Middleware***
 
 1. **Anonymous (or inline) Middleware**
     
@@ -357,8 +355,9 @@ export default defineNuxtConfig({
     
     **전역 라우트 미들웨어**는 `middleware/` 디렉토리에 배치되어 (`.global` 접미사와 함께) 모든 라우트 변경 시 자동으로 실행
 
-
 (예시)
+```javascript
+
 // middleware/my-middleware.ts
 
 export default defineNuxtRouteMiddleware((to, from) => {
@@ -411,13 +410,13 @@ definePageMeta({
 > useState 컴포저블은 ref 대신 사용할 수 있으며 SSR 친화적. 해당 값은 서버 측 렌더링 후(클라이언트 측 하이드레이션 중) 유지되며 고유 키를 사용하여 모든 컴포넌트에서 공유됨.
 
 ```javascript
-#example
+// example
 <script setup lang="ts">
 const counter = useState('counter', () => Math.round(Math.random() * 1000))
 </script>
 
 ```
-** 내장 상태관리 컴포저블이기에 공통적으로 Pinia 를 사용하는게 나을듯. (확장성&기능 상위호환)
+**내장 상태관리 컴포저블이기에 공통적으로 Pinia 를 사용하는게 나을듯. (확장성&기능 상위호환)**
 ```
 useState() → → → → → → → 복잡도 → → → → → → → Pinia
 ```
@@ -427,14 +426,16 @@ useState() → → → → → → → 복잡도 → → → → → → → Pin
 
 > pages, components, plugins 내에서 들어오는 요청 헤더에 액세스하기 위한 내장 컴포저블
 > 브라우저에서 useRequestHeaders는 빈 객체를 반환함 (중요)
+
 ```javascript
-# 모든 요청 헤더를 가져옵니다.
+// 모든 요청 헤더를 가져옵니다.
 const headers = useRequestHeaders()
 
-# 쿠키 요청 헤더를 가져옵니다.
+// 쿠키 요청 헤더를 가져옵니다.
 const headers = useRequestHeaders(['cookie'])
 
-# SSR 중 향후 내부 요청에 대한 초기 요청의 `authorization` 헤더에 액세스하고 프록시할 수 있습니다. 아래 예에서는 동형 `$fetch` 호출에 `authorization` 요청 헤더를 추가
+// SSR 중 향후 내부 요청에 대한 초기 요청의 `authorization` 헤더에 액세스하고 프록시할 수 있습니다. 아래 예에서는 동형 `$fetch` 호출에 `authorization` 요청 헤더를 추가
+
 <script setup lang="ts">
 const { data } = await useFetch('/api/confidential', {
   headers: useRequestHeaders(['authorization'])
