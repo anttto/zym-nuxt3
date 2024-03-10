@@ -455,12 +455,12 @@ const { data } = await useFetch('/api/confidential', {
 #install
 npm i pinia @pinia/nuxt
 
-#nuxt.config.ts
+// nuxt.config.ts
 export default defineNuxtConfig({
     modules: ['@pinia/nuxt'],
 })
 
-#example
+// example
 export const useCounterStore = defineStore('counter', () => {
   const count = ref(0);
   const name = ref('Eduardo');
@@ -473,7 +473,7 @@ export const useCounterStore = defineStore('counter', () => {
   return { count, name, doubleCount, increment };
 });
 
-#use
+// use
 <script setup lang="ts">
 const counterStore = useCounterStore();
 const { count, name, doubleCount } = storeToRefs(counterStore); //반응성(storeToRefs)
@@ -481,26 +481,24 @@ const { increment } = counterStore; //메서드
 </script>
 ```
 
-```
 ### Pinia가 `useState`보다 나은 이유는 무엇인가요?
 
-Pinia는 계속해서 더 많은 실용적인 기능을 추가한 결과물입니다.
+> Pinia는 계속해서 더 많은 실용적인 기능을 추가한 결과물입니다.
+> Pinia는 Nuxt의 `useState`보다 더 나은 개발자 경험(DX)을 제공하여 응용 프로그램이 크기와 복잡성이 커짐에 따라 필요한 더 많은 기능을 제공합니다. 다시 말하면, Pinia를 사용하지 않으면 응용 프로그램을 다시 만들고 고유의 상태 관리 라이브러리를 작성할 가능성이 매우 높습니다. 그러니 처음부터 고생을 피해보세요.
 
-Pinia는 Nuxt의 `useState`보다 더 나은 개발자 경험(DX)을 제공하여 응용 프로그램이 크기와 복잡성이 커짐에 따라 필요한 더 많은 기능을 제공합니다. 다시 말하면, Pinia를 사용하지 않으면 응용 프로그램을 다시 만들고 고유의 상태 관리 라이브러리를 작성할 가능성이 매우 높습니다. 그러니 처음부터 고생을 피해보세요.
-
-Pinia가 `useState`에 비해 우리에게 제공하는 주요 DX 개선 사항은 다음과 같습니다.
+**Pinia가 `useState`에 비해 우리에게 제공하는 주요 DX 개선 사항은 다음과 같습니다.**
 
 1. 매우 슬릭한 DevTools 통합
 2. 상태를 조직하기 위한 저장소
 3. 상태 업데이트 및 상태 검색을 더 쉽게하기 위한 Actions 및 Getters
-```
+
 
 #### Pinia 상태 유지 (pinia-plugin-persistedstate) 
 ```javascript
-#install
+// install
 npm i -D @pinia-plugin-persistedstate/nuxt
 
-#nuxt.config.ts
+// nuxt.config.ts
 export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt', // needed
@@ -508,7 +506,7 @@ export default defineNuxtConfig({
   ]
 })
 
-#use
+// use
 export const useStore = defineStore('main', () => {
 	const someState = ref('hello pinia');
 
@@ -517,18 +515,18 @@ export const useStore = defineStore('main', () => {
 	};
 }, {
   
-  //기본값 (쿠키)
+  // 기본값 (쿠키)
   persist: true,  
   
-  //확장형 (쿠키, 로컬스토리지 등 변경)
+  // 확장형 (쿠키, 로컬스토리지 등 변경)
   persist: {
     storage: persistedState.localStorage,
   },
   
   // 다만, 로컬스토리지 저장 방식으로 변경할 시, client 환경에서 localstorage가 작동하기 때문에
-  pinia 의 상태값이 ssr 이후에 불러와지는 이슈가 있음. (hydration 이슈 발생함)
-  ClientOnly 로 처리는 되지만 깜빡이는 상태가 보임. (좋지않다...) 
-  '그냥 쿠키로 처리하자.'
+  // pinia 의 상태값이 ssr 이후에 불러와지는 이슈가 있음. (hydration 이슈 발생함)
+  // ClientOnly 로 처리는 되지만 깜빡이는 상태가 보임. (좋지않다...) 
+  // '그냥 쿠키로 처리하자.'
 })
 ```
 
@@ -540,12 +538,10 @@ export const useStore = defineStore('main', () => {
 
 ```javascript
 
-<script setup lang="ts">
-# 'counter'라는 쿠키를 생성하고,
+// 'counter'라는 쿠키를 생성하고,
 const counter = useCookie('counter')
-# 쿠키값이 없으면 초기값을 임이의 값으로 설정합니다.
+// 쿠키값이 없으면 초기값을 임이의 값으로 설정합니다.
 counter.value = counter.value || Math.round(Math.random() * 1000)
-</script>
 
 <template>
   <div>
@@ -556,21 +552,13 @@ counter.value = counter.value || Math.round(Math.random() * 1000)
     <button @click="counter++">+</button>
   </div>
 </template>
-
 ```
 
 ```javascript
-# layouts/default.vue
-<template>
-<!-- ...생략... -->
-</template>
-<script setup lang="ts">
-// ...생략...
-watch(locale, (val) => (useCookie('locale').value = val));
-</script>
+// layouts/default.vue
+watch(local e, (val) => (useCookie('locale').value = val));
 
-
-# plugins/i18n.ts
+// plugins/i18n.ts
 import { createI18n } from 'vue-i18n';
 
 export default defineNuxtPlugin(({ vueApp }) => {
