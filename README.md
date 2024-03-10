@@ -447,7 +447,7 @@ const { data } = await useFetch('/api/confidential', {
 
 [공식 nuxt/pinia](https://nuxt.com/modules/pinia)
 
-```javascript
+```bash
 #install
 npm i pinia @pinia/nuxt
 
