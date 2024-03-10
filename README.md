@@ -61,7 +61,7 @@ npm install -D vue-tsc typescript
 ## ✅ TypeScript
 
 ```javascript
-# ~/types/course.ts
+// ~/types/course.ts
 export interface Course {
   title: string;
   subtitle: string;
@@ -77,7 +77,7 @@ export interface Course {
   gymcodingUrl: string;
 }
 
-# 상단의 Course 타입을 확장하여 필요한 부분의 타입을 추가 하거나 변경함
+// 상단의 Course 타입을 확장하여 필요한 부분의 타입을 추가 하거나 변경함
 export interface CourseWithPath
   extends Omit<Course, 'rating' | 'reviewsCount' | 'studentCount'> {
   rating: string;
@@ -86,7 +86,7 @@ export interface CourseWithPath
   path: string;
 }
 
-# CourseWithPath를 사용하는 컴포넌트 예시
+// CourseWithPath를 사용하는 컴포넌트 예시
 import type { CourseWithPath } from '~/types/course';
 
 interface CourseReturn {
@@ -111,14 +111,15 @@ export const useCourse = (courseSlug: string): CourseReturn => {
 #### ✅ 전역 타입 지정 (타입 훅?)
 
 ```javascript
-# ~/types/global.d.ts
+// ~/types/global.d.ts
 export {};
 declare global {
   type Maybe<T> = T | null | undefined
 }
-# type Maybe<T> = T | null | undefined;는 제네릭 타입 Maybe를 정의하고 있으며, 이는 주어진 타입 T, null, 또는 undefined 중 하나를 가질 수 있는 유니온 타입이다. 특정 값이 존재하지 않거나, 아직 할당되지 않았을 수 있는 상황을 타입 시스템에서 명시적으로 표현하고자 할 때 유용
 
-# export {}; 와 함께 사용된 declare global은 TypeScript 모듈 내에서 전역 타입을 선언하는 방법.
+// type Maybe<T> = T | null | undefined;는 제네릭 타입 Maybe를 정의하고 있으며, 이는 주어진 타입 T, null, 또는 undefined 중 하나를 가질 수 있는 유니온 타입이다. 특정 값이 존재하지 않거나, 아직 할당되지 않았을 수 있는 상황을 타입 시스템에서 명시적으로 표현하고자 할 때 유용
+
+// export {}; 와 함께 사용된 declare global은 TypeScript 모듈 내에서 전역 타입을 선언하는 방법.
 
 ```
 
@@ -133,7 +134,7 @@ const route = useRoute();
 const param = route.params; //params 전체 
 const courseSlug = route.params.courseSlug as string; //courseSlug params 가져오기 (string 타입 강제 지정)
 </script>
-# path(params), query 모두 적용 가능 
+// path(params), query 모두 적용 가능 
 ```
 
 ## definePageMeta
@@ -190,7 +191,7 @@ const courseSlug = route.params.courseSlug as string; //courseSlug params 가져
 ---| default.vue
 ---| custom.vue
 
-# ~/layouts/default.vue
+// ~/layouts/default.vue
 <template>
   <div>
     <p>모든 페이지에서 공유되는 기본 레이아웃 콘텐츠</p>
@@ -198,12 +199,12 @@ const courseSlug = route.params.courseSlug as string; //courseSlug params 가져
   </div>
 </template>
 
-# custom layout (definePageMeta 이용)
+// custom layout (definePageMeta 이용)
 definePageMeta({
   layout: 'custom'
 })
 
-# 동적 layout 처리 (setPageLayout 이용)
+// 동적 layout 처리 (setPageLayout 이용)
 
 function enableCustomLayout () {
   setPageLayout('custom')
@@ -224,13 +225,13 @@ definePageMeta({
 > 페이지 탐색(이동) 함수
 
 ```javascript
-# 'to'를 문자열로 전달
+// 'to'를 문자열로 전달
 await navigateTo('/search')
 
-# ... 또는 라우트(route) 객체로
+// ... 또는 라우트(route) 객체로
 await navigateTo({ path: '/search' })
 
-# ... 또는 쿼리 매개변수가 있는 라우트(route) 객체로
+// ... 또는 쿼리 매개변수가 있는 라우트(route) 객체로
 await navigateTo({
   path: '/search',
   query: {
@@ -239,7 +240,7 @@ await navigateTo({
   }
 })
 
-# Route Middleware
+// Route Middleware
 export default defineNuxtRouteMiddleware((to, from) => {
   if (to.path !== '/search') {
 		// 리디렉션 코드를 '301 Moved Permanently'으로 설정
@@ -247,17 +248,17 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 })
 
-# 외부 링크 
-# 외부 URL로의 이동은 기본적으로 허용되지 않습니다.
+// 외부 링크 
+// 외부 URL로의 이동은 기본적으로 허용되지 않습니다.
 await navigateTo('https://nuxt.com')
 
-# 'external' 매개변수를 'true'로 설정하면 성공적으로 리디렉션됩니다.
+// 'external' 매개변수를 'true'로 설정하면 성공적으로 리디렉션됩니다.
 await navigateTo('https://nuxt.com', {
   external: true
 })
 
-# open 속성
-# 새 탭에서 'https://nuxt.com'이 열립니다.
+// open 속성
+// 새 탭에서 'https://nuxt.com'이 열립니다.
 await navigateTo('https://nuxt.com', {  
   open: {
     target: '_blank',
@@ -268,7 +269,7 @@ await navigateTo('https://nuxt.com', {
   }
 })
 
-# 예시
+// 예시
 const movePage = async (path: string) => {
   await navigateTo(path);
 };
@@ -295,16 +296,16 @@ export default defineNuxtPlugin((nuxtApp) => {
 ```javascript
 #Auto-imports 비활성화
 
-# nuxt.config.ts
+// nuxt.config.ts
 export default defineNuxtConfig({
   imports: {
     autoImport: false
   }
 })
 
-#third-party 패키지 Auto-import
+// third-party 패키지 Auto-import
 
-# nuxt.config.ts
+// nuxt.config.ts
 export default defineNuxtConfig({
   imports: {
     presets: [
@@ -358,18 +359,18 @@ export default defineNuxtConfig({
 
 
 (예시)
-# middleware/my-middleware.ts
+// middleware/my-middleware.ts
 
 export default defineNuxtRouteMiddleware((to, from) => {
   if (to.params.id === '1') {
     return abortNavigation(); // 네비게이션을 중단 시킴
   }
-  # to.path를 활용한 무한 리디렉션 루프 방지
+  // to.path를 활용한 무한 리디렉션 루프 방지
   if (to.path !== '/') {
     return navigateTo('/')
   }
 
-  #서버 렌더링 시 (초기 url 입력시)
+  // 서버 렌더링 시 (초기 url 입력시)
   if (process.server) return navigateTo('/');
 })
 ```
@@ -447,8 +448,8 @@ const { data } = await useFetch('/api/confidential', {
 
 [공식 nuxt/pinia](https://nuxt.com/modules/pinia)
 
-```bash
-# install
+```javascript
+#install
 npm i pinia @pinia/nuxt
 
 #nuxt.config.ts
@@ -456,7 +457,7 @@ export default defineNuxtConfig({
     modules: ['@pinia/nuxt'],
 })
 
-# example
+#example
 export const useCounterStore = defineStore('counter', () => {
   const count = ref(0);
   const name = ref('Eduardo');
@@ -469,7 +470,7 @@ export const useCounterStore = defineStore('counter', () => {
   return { count, name, doubleCount, increment };
 });
 
-# use
+#use
 <script setup lang="ts">
 const counterStore = useCounterStore();
 const { count, name, doubleCount } = storeToRefs(counterStore); //반응성(storeToRefs)
