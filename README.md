@@ -494,18 +494,22 @@ const { increment } = counterStore; //메서드
 
 
 #### Pinia 상태 유지 (pinia-plugin-persistedstate) 
-```javascript
-// install
+```bash
+# install
 npm i -D @pinia-plugin-persistedstate/nuxt
+```
 
-// nuxt.config.ts
+```bash
+# nuxt.config.ts
 export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt', // needed
     '@pinia-plugin-persistedstate/nuxt',
   ]
 })
+```
 
+```javascript
 // use
 export const useStore = defineStore('main', () => {
 	const someState = ref('hello pinia');
