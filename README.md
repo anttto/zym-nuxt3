@@ -587,6 +587,136 @@ export default defineNuxtPlugin(({ vueApp }) => {
 ```
 
 
+## ✅ 로그인(Auth) 관련 BackEnd & FrontEnd 프로세스 
+> 서버단 api개발 에서 front 호출까지
+
+#### 1. DB 에서 유저 조회
+- @/server/model/user.ts 에서 DB에서 가져오는 것 처럼 로그인한 유저를 찾아서 가져오는 로직을 작성
+- `getUserByEmail` 실행 : 반환값은 로그인 시도한 이메일이 같은 유저의 객체
+
+#### 2. API 개발 (로그인, 로그아웃, 유저 조회)
+  (1) 로그인 : @/server/routes/auth/login.post.ts
+  - body 에 담긴 email, password 를 추출
+  - 이메일이나 패스워드가 없으면 에러를 던짐 (check1)
+  - `getUserByEmail` 함수 호출 (로그인 시도한 유저의 데이터 추출)
+  ```javascript
+    const userWithPassword = getUserByEmail(email);
+  ```
+  - 로그인 시도한 유저의 패스워드가 맞는지 검증 (입력한 pw와 데이터의 pw가 일치하는지)
+  ```javascript
+    const verified = verifyPassword(password, userWithPassword.password);
+  ```
+  - 일치하면 패스워드를 제외한 나머지 정보를 최종 로그인 유저 정보로 저장
+  ```javascript
+    const { password: _password, ...userWithoutPassword } = userWithPassword;
+  ```
+  - 최종 로그인 유저 데이터를 쿠키에 저장
+  ```javascript
+  setCookie(event, '__user', JSON.stringify(userWithoutPassword));
+  ```
+  - api 응답값 반환
+  ```javascript
+  return {
+    user: userWithoutPassword, //패스워드 값이 없는 최종 로그인 유저 데이터
+  };
+  ```
+<br><br>
+
+  (2) 로그아웃 : @/server/routes/auth/logout.post.ts
+  - 유저정보 쿠키 삭제 및 user:null 리턴
+  ```javascript
+  export default defineEventHandler((event) => {
+    deleteCookie(event, '__user');
+    return {
+      user: null,
+    };
+  });
+  ```
+<br><br>
+
+  (3) 유저 조회 : @/server/routes/auth/user.get.ts
+  - 쿠키를 추출하여 유저 유,무 체크 후 리턴
+  ```javascript
+  export default defineEventHandler((event) => {
+    const userJsonString = getCookie(event, '__user');
+
+    if (!userJsonString) {
+      return { user: null };
+    }
+
+    const user = JSON.parse(userJsonString);
+
+    return {
+      user,
+    };
+  });
+  ```
+<br><br>
+
+
+#### 3. 상태관리 및 api 호출 (로그인, 로그아웃, 유저 조회)
+  >  @/stores/auth.ts
+  (1) 로그인
+  ```javascript
+  const authUser = ref<UserWithoutPassword | null>(); //최종 유저
+
+  const signIn = async (email: string, password: string) => {
+    const data = await $fetch<{ user: UserWithoutPassword }>('/auth/login', {
+      method: 'POST',
+      body: {
+        email,
+        password,
+      },
+    });
+
+    const { user: fonndUser } = data; // 유저 DB 에서 일치하는 User 조회 : fonndUser에 담음
+
+    if (!fonndUser) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Invalid email or password',
+      });
+    }
+
+    setUser(fonndUser); //하단 함수
+  };
+
+  // User 저장 : authUser 
+  const setUser = (user: Maybe<UserWithoutPassword>) =>
+    (authUser.value = user);
+  ```
+  
+  (2) 로그아웃
+  ```javascript
+  const signOut = async () => {
+    await $fetch('/auth/logout', { method: 'POST' });
+    setUser(null);
+  };
+  ```
+
+  (3) 조회
+  ```javascript
+  const fetchUser = async () => {
+    const data = await $fetch<{ user: UserWithoutPassword }>('/auth/user', {
+      headers: useRequestHeaders(['cookie']), //초기 서버사이드 랜더링 시에도 쿠키를 조회하는 로직 구현
+      //하이드레이션 발생 방지.
+    });
+    setUser(data.user);
+  };
+  ```
+  (4) Pinia Auth 최종 반환 값
+  ```javascript
+  return {
+    user: authUser,
+    isAuthenticated: computed(() => !!authUser.value),
+    isAdmin: computed(() =>
+      !authUser.value ? false : authUser.value.roles.includes('ADMIN'),
+    ),
+    signIn,
+    signOut,
+    fetchUser,
+  };
+  ```
 
 ## ✅ 프로퍼티 제외 & 추출 예시
 > 스프레드 연산자를 이용하여 각 객체의 프로퍼티를 제외 및 추출 하여 새로운 객체 배열을 만드는 기본 예시
@@ -615,4 +745,39 @@ const addJobToUsers = () => {
   return names;
 };
 addJobToUsers();
+```
+
+
+
+## ✅ $fetch & useFetch 예시
+> NUXT3 api 호출 로직
+
+```javascript
+
+// $fetch
+export const signIn = async (email: string, password: string) => {
+  const data = await $fetch<{ user: UserWithoutPassword }>('/auth/login', {
+    method: 'POST',
+    body: {
+      email,
+      password,
+    },
+  });
+  return data;
+};
+
+//useFetch : async, await 으로 Promise 객체가 반환됨
+export const useCourse = async (courseSlug: string): Promise<CourseReturn> => {
+  const { data, error } = await useFetch(`/api/courses/${courseSlug}`);
+
+  // throw error
+  if (error.value) {
+    throw createError({
+      ...error.value,
+    });
+  }
+
+  return data.value as CourseReturn; //타입 단언
+};
+
 ```

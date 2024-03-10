@@ -1,4 +1,3 @@
-import { getUser } from '~/composables/auth/userData';
 import type { UserWithoutPassword } from '~/types/user';
 
 export const useAuthStore = defineStore(
@@ -8,8 +7,17 @@ export const useAuthStore = defineStore(
     const authUser = ref<UserWithoutPassword | null>();
 
     // Sign In
-    const signIn = (email: string, password: string) => {
-      const fonndUser = getUser(email, password); // 유저 DB 에서 일치하는 User 조회
+    const signIn = async (email: string, password: string) => {
+      const data = await $fetch<{ user: UserWithoutPassword }>('/auth/login', {
+        method: 'POST',
+        body: {
+          email,
+          password,
+        },
+      });
+
+      const { user: fonndUser } = data; // 유저 DB 에서 일치하는 User 조회
+
       if (!fonndUser) {
         throw createError({
           statusCode: 401,
@@ -24,7 +32,17 @@ export const useAuthStore = defineStore(
       (authUser.value = user);
 
     // Sign Out
-    const signOut = () => setUser(null);
+    const signOut = async () => {
+      await $fetch('/auth/logout', { method: 'POST' });
+      setUser(null);
+    };
+
+    const fetchUser = async () => {
+      const data = await $fetch<{ user: UserWithoutPassword }>('/auth/user', {
+        headers: useRequestHeaders(['cookie']),
+      });
+      setUser(data.user);
+    };
 
     return {
       user: authUser,
@@ -34,6 +52,7 @@ export const useAuthStore = defineStore(
       ),
       signIn,
       signOut,
+      fetchUser,
     };
   },
   {
