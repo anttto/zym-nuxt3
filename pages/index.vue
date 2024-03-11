@@ -20,6 +20,15 @@
         </NuxtLink>
       </div>
     </div>
+    <TestPageSlot>
+      <template #test1>
+        <h1>이게되나</h1>
+      </template>
+
+      <template #test2>
+        <h1>이게되나222</h1>
+      </template>
+    </TestPageSlot>
   </q-page>
 </template>
 

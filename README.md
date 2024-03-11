@@ -451,10 +451,11 @@ const { data } = await useFetch('/api/confidential', {
 
 [공식 nuxt/pinia](https://nuxt.com/modules/pinia)
 
-```javascript
-#install
+```bash
+# install
 npm i pinia @pinia/nuxt
-
+```
+```javascript
 // nuxt.config.ts
 export default defineNuxtConfig({
     modules: ['@pinia/nuxt'],
